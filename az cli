@@ -1,0 +1,10 @@
+az group create --name rg-chat-app --location "germanywestcentral"
+az webpubsub create --name testpubsub --resource-group rg-chat-app --location "germanywestcentral" --sku Free_F1
+az webpubsub key show --name testpubsub --resource-group rg-chat-app
+az staticwebapp create --name static-chat-app --resource-group rg-chat-app --source https://github.com/$GITHUB_USER_NAME/chat-app --location "germanywestcentral" --branch main --app-location "src" --api-location "api" --login-with-github
+az staticwebapp appsettings set --name static-chat-app --setting-names WebPubSubConnectionString=$AWPS_ACCESS_KEY WebPubSubHub=sample_swa
+az staticwebapp show --name static-chat-app --query "repositoryUrl"
+az staticwebapp show --name static-chat-app --query "defaultHostname"
+az webpubsub hub create --name testpubsub --resource-group rg-chat-app --hub-name "sample_swa" --event-handler url-template=https://$STATIC_WEB_APP/api/{event} user-event-pattern="*" --event-handler url-template=https://$STATIC_WEB_APP/api/{event} system-event="connect"
+
+az webpubsub hub create -n testpubsub -g rg-chat-app --hub-name sample_swa --event-handler url-template="http://<....>/api/{event}" user-event-pattern="*" --event-handler url-template="http://<....>/api/{event}" system-event="connect"
