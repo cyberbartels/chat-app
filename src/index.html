@@ -177,10 +177,11 @@
 
                         this.log("Connecting...");
                         // id in query map to the name in function, use like {query.userid}
-                        
+                        this.log("URL: " + `${this.endpoint}api/login?userid=${this.username}`);
                         axios.post(`${this.endpoint}api/login?userid=${this.username}`, null, null)
                         .then(resp => resp.data)
                         .then(info => {
+                            this.log("Reveived websocket url: " + info.url);
                             return info.url;
                         }).catch(alert)
                         .then(url => {
